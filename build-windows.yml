@@ -1,0 +1,29 @@
+name: Build Afnan Dawakhana EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build and Excel packages
+        run: python -m pip install pyinstaller openpyxl
+      - name: Build EXE
+        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name AfnanDawakhana --hidden-import openpyxl main.py
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: AfnanDawakhana-Windows-v2
+          path: dist/AfnanDawakhana.exe
